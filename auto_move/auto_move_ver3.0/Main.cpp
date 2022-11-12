@@ -73,9 +73,19 @@ double dir_cal() {
 		kakudo = 270.00+s_ta;
 	}
 	return kakudo;
-}
-//正面を0ラジアンとする
+	//正面を0ラジアンとする
 //上から見て反時計回りを＋180,時計回りを-180として考える
+}
+
+/*
+double dir_cal() {
+	double s_ta = atan2(dddis[1], dddis[0]);//返り値はラジアン
+	kakudo= s_ta * (180.00 / PI)*cos(s_ta);//この状態では右が０ラジアン
+	return kakudo;
+	//三角関数からの誤差の影響で目標座標に届かない
+}
+*/
+
 void time_cal() {
 	up_times = (max_speed - start_speed) / acc; //最高速度までの加速にかかる時間 /s
 	down_times = (max_speed - end_speed) / acc; //減速にかかる時間 /s
@@ -136,7 +146,7 @@ void Main()
 			time_cal();
 			timer_start();
 		}
-		Print << dir;
+		Print << target_point(1);
 		get = (target_point(1) - tar) / (((double)millis() / 1000.0) - mil);//m/s
 		plotter1
 			.resize(Scene::Rect())
