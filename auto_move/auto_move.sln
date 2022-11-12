@@ -5,6 +5,10 @@ VisualStudioVersion = 17.4.33103.184
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "auto_move", "auto_move\auto_move.vcxproj", "{567B85C2-5AF9-476F-A45C-D03C3045C2C3}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "auto_move_ver_2.0", "auto_move_ver_2.0\auto_move_ver_2.0.vcxproj", "{EC29125A-47D2-40FD-852F-6361B82518FD}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "auto_move_ver3.0", "auto_move_ver3.0\auto_move_ver3.0.vcxproj", "{D7DBCD42-46B4-41EA-B0EE-65D5FCCF5700}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -15,6 +19,14 @@ Global
 		{567B85C2-5AF9-476F-A45C-D03C3045C2C3}.Debug|x64.Build.0 = Debug|x64
 		{567B85C2-5AF9-476F-A45C-D03C3045C2C3}.Release|x64.ActiveCfg = Release|x64
 		{567B85C2-5AF9-476F-A45C-D03C3045C2C3}.Release|x64.Build.0 = Release|x64
+		{EC29125A-47D2-40FD-852F-6361B82518FD}.Debug|x64.ActiveCfg = Debug|x64
+		{EC29125A-47D2-40FD-852F-6361B82518FD}.Debug|x64.Build.0 = Debug|x64
+		{EC29125A-47D2-40FD-852F-6361B82518FD}.Release|x64.ActiveCfg = Release|x64
+		{EC29125A-47D2-40FD-852F-6361B82518FD}.Release|x64.Build.0 = Release|x64
+		{D7DBCD42-46B4-41EA-B0EE-65D5FCCF5700}.Debug|x64.ActiveCfg = Debug|x64
+		{D7DBCD42-46B4-41EA-B0EE-65D5FCCF5700}.Debug|x64.Build.0 = Debug|x64
+		{D7DBCD42-46B4-41EA-B0EE-65D5FCCF5700}.Release|x64.ActiveCfg = Release|x64
+		{D7DBCD42-46B4-41EA-B0EE-65D5FCCF5700}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
