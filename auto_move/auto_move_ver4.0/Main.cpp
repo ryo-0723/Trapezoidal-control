@@ -29,26 +29,27 @@ void Main()
 				auto_set.set_next_status();
 			}
 		}
-		
 		switch (next_point) {
-			
 		case 1:
-			auto_set.calculation(0.0, 0.0, point1,now_point1);
-		
+			auto_set.calculation(0.0, 1.5, point1,now_point1);
 			break;
 		case 2:
-			auto_set.calculation(0.0, 0.0, point2,now_point2);
+			auto_set.calculation(1.5, 0.0, point2,now_point2);
 			break;//break入れろやああああああ
 		case 3:
 			auto_set.calculation(0.0, 0.0, point3, now_point3);
+			break;
+		case 4:
+			auto_set.calculation(0.0, 0.0, point1, now_point1);
+			break;
 		}
+
 		auto_set.tar_point();
 		//理想ではこの形で自動を回すこと
 
 
 		ClearPrint();
 		Print << auto_set.read_ms()*0.001;
-		Print << auto_set.point_status();
 		Print << auto_set.all_time();
 		Print << auto_set.end_p_x();
 		Print << auto_set.end_p_y();

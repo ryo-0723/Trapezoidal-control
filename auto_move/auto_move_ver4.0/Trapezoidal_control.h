@@ -1,5 +1,9 @@
 ﻿#pragma once
-
+/*
+* 現状の課題点は次の順路に移行したときに、がたつきが見られるところ
+* 円を描く動作を描くこと
+* 
+*/
 #include <Siv3D.hpp>
 #define DEG_TO_RAD  0.01745329251994329576923690768489L;
 #define RAD_TO_DEG  57.295779513082320876798154814105L;
@@ -7,24 +11,17 @@
 
 class Trapezoidal {
 private:
-	double end_s=0, start_s=0, max_s=0;
-	unsigned long times = 0;
-	double limit_s = 0.00;
-	double up_t=0, down_t=0, max_power_t=0, all_t=0;
-	double L1=0, L3=0;
-	double kakudo=0, dir=0, dis=0;
-	bool Stop_flag=false;
-	bool Reset_flag = true;
-	bool Timer_state=false;
-	double acc_;
-	double acc;
-	bool point_state = false;
-	bool cal_state=false;
-	double target[2] = {0,0};
+	double end_s = 0, start_s = 0, max_s = 0, limit_s = 0.00;
+	double up_t = 0, down_t = 0, max_power_t = 0, all_t = 0;
+	double L1 = 0, L3 = 0;
+	double kakudo = 0, dir = 0, dis = 0;
+	double acc_, acc;
+	double target[2] = { 0,0 };
 	double end_potion[2] = { 0,0 };
-	bool next_state = true;
-	unsigned long old_times=0;
-	double now[2] = { 0,0 };
+	unsigned long times = 0;
+	bool Stop_flag = false, Reset_flag = false, Timer_state = false;
+	bool cal_state = false, next_state = true;
+
 public:
 	Trapezoidal(double acc, double max_s){
 		this->acc=acc;
@@ -65,17 +62,16 @@ public:
 		Stop_flag = 1;
 	}
 	void timer_reset() {
-
 		Reset_flag = 1;
 	}
 	unsigned long read_ms() {
 		if (Reset_flag)return 0;
 		if (Stop_flag)return times;
-		return millis() - times-old_times;// ms
+		return millis() - times;// ms
 	}
 
 	void calculation(double s_s, double e_s,double dis_[2],double now_p[2]) {
-		if (cal_state) {
+		if (cal_state) {//switch文で何度呼び出されても一度だけ動作するようにするもの
 			return;
 		}
 		start_s = s_s;
@@ -118,12 +114,11 @@ public:
 			all_t = up_t + down_t + max_power_t; //移動にかかる合計時間 / s
 		}
 		cal_state = true;
-		point_state = true;
 	}
 
 	void tar_point() {
 		//  X=Vot+(1/2)*at^2;
-		if (point_state) {//タイマーを開始する　何度呼び出しても一度だけ実行する
+		if (cal_state) {//タイマーを開始する　何度呼び出しても一度だけ実行する
 			timer_start();
 		}
 		double t= read_ms() * 0.001;
@@ -148,9 +143,8 @@ public:
 			end_potion [0] =target[0];//一つの経路を巡行し終えた時の座標の情報を保持
 			end_potion[1] = target[1];
 			timer_stop();
-			timer_reset();
+
 			cal_state = false;
-			point_state = false;
 			next_state = true;
 		}
 	}
@@ -176,9 +170,6 @@ public:
 
 	double all_time() {
 		return all_t;
-	}
-	bool point_status() {//計算済みの経路を巡行し終えたらtrueになる　
-		return point_state;
 	}
 };
 extern Trapezoidal auto_set;
