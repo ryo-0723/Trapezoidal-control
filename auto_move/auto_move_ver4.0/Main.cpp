@@ -4,10 +4,13 @@
 
 void Main()
 {
-	double point1[2] = { 1.5,3.0 };
-	double point2[2] = {2.5,6.8};
+	double point1[2] = { 1.5,4.0 };
+	double point2[2] = {4.5,8.0};
+	double point3[2] = { 0,0 };
+
 	double now_point1[2] = {0,0};
-	double now_point2[2] = {1.5,3.0};
+	double now_point2[2] = {1.5,4.0};
+	double now_point3[2] = { 4.5,8.0 };
 	int next_point=0;
 	int a = 0;
 	double tar = 0;
@@ -36,28 +39,35 @@ void Main()
 		case 2:
 			auto_set.calculation(0.0, 0.0, point2,now_point2);
 			break;//break入れろやああああああ
+		case 3:
+			auto_set.calculation(0.0, 0.0, point3, now_point3);
 		}
-
 		auto_set.tar_point();
 		//理想ではこの形で自動を回すこと
+
+
+		ClearPrint();
+		Print << auto_set.read_ms()*0.001;
 		Print << auto_set.point_status();
-		//Print << auto_set.read_ms()*0.001;
 		Print << auto_set.all_time();
-		Print << auto_set.end_p();
+		Print << auto_set.end_p_x();
+		Print << auto_set.end_p_y();
 		Print << next_point;
+		Print << auto_set.tar_p_x();
+		Print << auto_set.tar_p_y();
 
 		get = (auto_set.tar_p_y() - tar) / (((double)auto_set.millis() / 1000.0) - mil);//m/s
 		plotter1
 			.resize(Scene::Rect())
 			.plot(auto_set.tar_p_y())
-			.maximum(5)
+			.maximum(10)
 			.draw(Palette::Aqua)
 			.drawGrid();
 
 		plotter2
 			.resize(Scene::Rect())
 			.plot(auto_set.tar_p_x())
-			.maximum(5)
+			.maximum(10)
 			.draw(Palette::Red)
 			.drawGrid();
 

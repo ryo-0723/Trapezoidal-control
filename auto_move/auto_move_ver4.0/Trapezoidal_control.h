@@ -21,8 +21,10 @@ private:
 	bool point_state = false;
 	bool cal_state=false;
 	double target[2] = {0,0};
-	double end_potion = 0;
+	double end_potion[2] = { 0,0 };
 	bool next_state = true;
+	unsigned long old_times=0;
+	double now[2] = { 0,0 };
 public:
 	Trapezoidal(double acc, double max_s){
 		this->acc=acc;
@@ -56,19 +58,20 @@ public:
 		Reset_flag = 0;
 	}
 	void timer_stop() {
-		Timer_state;
+		Timer_state=0;
 		if (Stop_flag == 0) {
 			times = millis() - times;
 		}
 		Stop_flag = 1;
 	}
 	void timer_reset() {
+
 		Reset_flag = 1;
 	}
 	unsigned long read_ms() {
 		if (Reset_flag)return 0;
 		if (Stop_flag)return times;
-		return millis() - times;// ms
+		return millis() - times-old_times;// ms
 	}
 
 	void calculation(double s_s, double e_s,double dis_[2],double now_p[2]) {
@@ -77,10 +80,12 @@ public:
 		}
 		start_s = s_s;
 		end_s = e_s;
-		
-		dis = sqrt(sq(dis_[0]-now_p[0]) + sq(dis_[1]-now_p[1]));//極座標でのrを求める
+		dis_[0] = dis_[0] - now_p[0];
+		dis_[1] = dis_[1] - now_p[1];
+		//おそらくatan2に式を入れてしまうと結果がバグる！！！！！
+		dis = sqrt(sq(dis_[0]) + sq(dis_[1]));//極座標でのrを求める
 
-		double s_ta = atan2((dis_[1]-now_p[1]), (dis_[0]-now_p[1]));//返り値はラジアン
+		double s_ta = atan2((dis_[1]), (dis_[0]));//返り値はラジアン
 		//座標から角度を求める
 		s_ta = s_ta * RAD_TO_DEG;//この状態では右が０ラジアン
 		if (s_ta > 0) {
@@ -135,30 +140,33 @@ public:
 		double target = up + mp + dp;
 		*/
 		if (dis < 0)    target_ = target_ * -1;
-		target_ += end_potion;
-
-			target[0] = target_ * cos(dir);
-			target[1] = target_ * -1 * sin(dir);
+			target[0] = target_ * cos(dir)+ end_potion[0];
+			target[1] = target_ * -1 * sin(dir)+ end_potion[1];
 
 
 		if (all_t <= t) {
-			end_potion = target_;//一つの経路を巡行し終えた時の座標の情報を保持
+			end_potion [0] =target[0];//一つの経路を巡行し終えた時の座標の情報を保持
+			end_potion[1] = target[1];
 			timer_stop();
 			timer_reset();
+			cal_state = false;
 			point_state = false;
 			next_state = true;
 		}
 	}
-	bool next_status() {
+	bool next_status() {//今回の経路を巡行し終えたらtrueになる
 		return next_state;
 	}
-	void set_next_status() {
+	void set_next_status() {//次の経路をセットしたら必ず行うこと
 		next_state = false;
 	}
-
-	double end_p() {
-		return end_potion;
+	double end_p_x() {
+		return end_potion[0];
 	}
+	double end_p_y() {
+		return end_potion[1];
+	}
+
 	double tar_p_x() {
 		return target[0];
 	}
@@ -169,7 +177,7 @@ public:
 	double all_time() {
 		return all_t;
 	}
-	bool point_status() {
+	bool point_status() {//計算済みの経路を巡行し終えたらtrueになる　
 		return point_state;
 	}
 };
