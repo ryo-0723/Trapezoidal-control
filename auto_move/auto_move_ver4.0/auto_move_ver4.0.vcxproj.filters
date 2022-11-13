@@ -776,10 +776,10 @@
     <ClInclude Include="stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Trapezoidal_control.h">
+    <ClInclude Include="Trapezoidal_control.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\auto_move_ver_2.0\Plotter.h">
+    <ClInclude Include="Plotter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
