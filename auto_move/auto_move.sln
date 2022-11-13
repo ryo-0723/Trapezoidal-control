@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "auto_move_ver_2.0", "auto_m
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "auto_move_ver3.0", "auto_move_ver3.0\auto_move_ver3.0.vcxproj", "{D7DBCD42-46B4-41EA-B0EE-65D5FCCF5700}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "auto_move_ver4.0", "auto_move_ver4.0\auto_move_ver4.0.vcxproj", "{DDE0B241-0727-4CD9-8E7F-049DF4E438FC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -27,6 +29,10 @@ Global
 		{D7DBCD42-46B4-41EA-B0EE-65D5FCCF5700}.Debug|x64.Build.0 = Debug|x64
 		{D7DBCD42-46B4-41EA-B0EE-65D5FCCF5700}.Release|x64.ActiveCfg = Release|x64
 		{D7DBCD42-46B4-41EA-B0EE-65D5FCCF5700}.Release|x64.Build.0 = Release|x64
+		{DDE0B241-0727-4CD9-8E7F-049DF4E438FC}.Debug|x64.ActiveCfg = Debug|x64
+		{DDE0B241-0727-4CD9-8E7F-049DF4E438FC}.Debug|x64.Build.0 = Debug|x64
+		{DDE0B241-0727-4CD9-8E7F-049DF4E438FC}.Release|x64.ActiveCfg = Release|x64
+		{DDE0B241-0727-4CD9-8E7F-049DF4E438FC}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
