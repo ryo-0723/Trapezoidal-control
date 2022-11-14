@@ -83,6 +83,7 @@ public:
 
 		double s_ta = atan2((dis_[1]), (dis_[0]));//返り値はラジアン
 		//座標から角度を求める
+		/*
 		s_ta = s_ta * RAD_TO_DEG;//この状態では右が０ラジアン
 		if (s_ta > 0) {
 			kakudo = s_ta - 90.0000;
@@ -94,6 +95,8 @@ public:
 			kakudo = 270.0000 + s_ta;
 		}
 		dir = kakudo * DEG_TO_RAD;
+		*/
+		dir = s_ta;
 		//正面を0ラジアンとする
         //上から見て反時計回りを＋180,時計回りを-180として考える
 
@@ -143,10 +146,13 @@ public:
 		double target = up + mp + dp;
 		*/
 		if (dis < 0)    target_ *= -1;
+		/*
 			target[0] = target_* cos(dir) + end_potion[0];
 			target[1] = target_  * -1 * sin(dir) + end_potion[1];
 			//極座標から直行座標に戻すときに位相をずらしてるから使う三角関数に注意！
-
+			*/
+		target[0] = target_ * cos(dir) + end_potion[0];
+		target[1] = target_ * sin(dir) + end_potion[1];
 		if (all_t <= t) {
 			end_potion [0] =target[0];//一つの経路を巡行し終えた時の座標の情報を保持
 			end_potion[1] = target[1];
