@@ -108,6 +108,7 @@ public:
 			up_t= (limit_s - start_s) *acc_;
 			down_t= (limit_s - end_s) * acc_;
 			all_t = up_t + down_t;
+			max_power_t = 0.0;
 		}
 		else {//台形が作れる場合の制御 
 			max_power_t = (abs(dis) - L1 - L3) / max_s; //最高速度での移動時間 /s
@@ -115,6 +116,13 @@ public:
 		}
 		cal_state = true;
 	}
+
+	/*
+	void calculation(double s_s, double e_s, double radius,double angle, double now_p[2]) {
+		//関数の多重定義だお
+
+	}
+	*/
 
 	void tar_point() {
 		//  X=Vot+(1/2)*at^2;
@@ -134,16 +142,16 @@ public:
 		double dp = (acc * sq(down_t) * 0.50 - acc * sq(down_t - dt) * 0.50) + end_s * dt;
 		double target = up + mp + dp;
 		*/
-		if (dis < 0)    target_ = target_ * -1;
-			target[0] = target_ * cos(dir)+ end_potion[0];
-			target[1] = target_ * -1 * sin(dir)+ end_potion[1];
-
+		if (dis < 0)    target_ *= -1;
+			target[0] = target_* cos(dir) + end_potion[0];
+			target[1] = target_  * -1 * sin(dir) + end_potion[1];
+			//極座標から直行座標に戻すときに位相をずらしてるから使う三角関数に注意！
 
 		if (all_t <= t) {
 			end_potion [0] =target[0];//一つの経路を巡行し終えた時の座標の情報を保持
 			end_potion[1] = target[1];
 			timer_stop();
-
+			timer_reset();
 			cal_state = false;
 			next_state = true;
 		}
