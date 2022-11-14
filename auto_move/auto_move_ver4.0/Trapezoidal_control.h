@@ -85,7 +85,7 @@ public:
 		//座標から角度を求める
 		/*
 		s_ta = s_ta * RAD_TO_DEG;//この状態では右が０ラジアン
-		if (s_ta > 0) {
+		if (s_ta > 0) {//これいらねぇやねええかああ
 			kakudo = s_ta - 90.0000;
 		}
 		else if (s_ta < 0 && s_ta >= -89.9999) {
