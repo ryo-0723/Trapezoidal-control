@@ -5,6 +5,8 @@
 * あとすること
 *     円を描く動作を描くこと
 * 
+* 距離の積算方式はずれが大きいとのことで断念した
+* 代わりに毎周期距離を一から計算している
 */
 #include <Siv3D.hpp>
 #define DEG_TO_RAD  0.01745329251994329576923690768489L;
@@ -106,12 +108,20 @@ public:
 		cal_state = true;
 	}
 
-	/*
-	void calculation(double s_s, double e_s, double radius,double angle, double now_p[2]) {
+	
+	void calculation(double start_s, double end_s, double radius,double angle, double dis_[2], double now_p[2]) {
 		//関数の多重定義だお
+		//角度の遷移を台形制御する
+		this->start_s = start_s;
+		this->end_s = end_s;
+		double cal_max_p_s = max_s / radius;//台形制御のときの最大速度（角速度）
+
+
+
+
+
 
 	}
-	*/
 
 	void tar_point() {
 		//  X=Vot+(1/2)*at^2;
