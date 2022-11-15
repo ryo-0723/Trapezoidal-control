@@ -5,8 +5,8 @@
 void Main()
 {
 	double point1[2] = { 1.5,4.0 };
-	double point2[2] = {4.5,8.0};
-	double point3[2] = { 1.0,0.5 };
+	double point2[2] = {3.0,8.0};
+	double point3[2] = { 6.0,16.0 };
 	double now_point1[2] = {0,0};
 	int next_point=0;
 	int a = 0;
@@ -27,21 +27,21 @@ void Main()
 				auto_set.set_next_status();
 			}
 		}
+		now_point1[0] = auto_set.end_p_x();
+		now_point1[1] = auto_set.end_p_y();
+
 		switch (next_point) {
 		case 1:
-			auto_set.calculation(0.0, 0.0, point1, now_point1);
+			auto_set.calculation(0.0, 1.0, point1, now_point1);
 			break;
 		case 2:
-			auto_set.calculation(0.0, 0.0, point2, point1);
+			auto_set.calculation(1.0, 3.0, point2, now_point1);
 			break;//break入れろやああああああ
 		case 3:
-			auto_set.calculation(0.0, 0.0, point3, point2);
+			auto_set.calculation(3.0, 0.0, point3, now_point1);
 			break;
 		case 4:
-			auto_set.calculation(0.0, 0.0, point1, point3);
-			break;
-		case 5:
-			auto_set.calculation(0.0, 0.0, now_point1, point1);
+			auto_set.calculation(0.0, 0.0, point1, now_point1);
 			break;
 		}
 
@@ -67,7 +67,7 @@ void Main()
 		Print << next_point;
 		Print << tar2;
 		Print << tar;
-
+		Print << auto_set.up__tmie();
 		plotter1
 			.resize(Scene::Rect())
 			.plot(get)

@@ -1,7 +1,9 @@
 ﻿#pragma once
 /*
 * 現状の課題点は次の順路に移行したときに、がたつきが見られるところ
-* 円を描く動作を描くこと
+* ↑仕方ない気がしてる
+* あとすること
+*     円を描く動作を描くこと
 * 
 */
 #include <Siv3D.hpp>
@@ -14,7 +16,7 @@ private:
 	double end_s = 0, start_s = 0, max_s = 0, limit_s = 0.00;
 	double up_t = 0, down_t = 0, max_power_t = 0, all_t = 0;
 	double L1 = 0, L3 = 0;
-	double kakudo = 0, dir = 0, dis = 0;
+	double dir = 0, dis = 0;
 	double acc_, acc;
 	double target[2] = { 0,0 };
 	double end_potion[2] = { 0,0 };
@@ -70,36 +72,20 @@ public:
 		return millis() - times;// ms
 	}
 
-	void calculation(double s_s, double e_s,double dis_[2],double now_p[2]) {
-		if (cal_state) {//switch文で何度呼び出されても一度だけ動作するようにするもの
-			return;
-		}
-		start_s = s_s;
-		end_s = e_s;
+	void calculation(double start_s, double end_s,double dis_[2],double now_p[2]) {
+		if (cal_state) 	return;
+		//switch文によって何度呼び出されても一度だけ動作するようにするもの
+		this->start_s = start_s;
+		this->end_s = end_s;
+		end_potion[0] = now_p[0];//手動で動かした後に自動に切り替えた時のつじつま合わせ
+		end_potion[1] = now_p[1];
 		dis_[0] = dis_[0] - now_p[0];
 		dis_[1] = dis_[1] - now_p[1];
-		//おそらくatan2に式を入れてしまうと結果がバグる！！！！！
-		dis = sqrt(sq(dis_[0]) + sq(dis_[1]));//極座標でのrを求める
-
-		double s_ta = atan2((dis_[1]), (dis_[0]));//返り値はラジアン
+		dis=sq(dis_[0]) + sq(dis_[1]);
+		dis = sqrt(dis);//極座標でのrを求める
+		dir = atan2(dis_[1], dis_[0]);//返り値はラジアン
 		//座標から角度を求める
-		/*
-		s_ta = s_ta * RAD_TO_DEG;//この状態では右が０ラジアン
-		if (s_ta > 0) {//これいらねぇやねええかああ
-			kakudo = s_ta - 90.0000;
-		}
-		else if (s_ta < 0 && s_ta >= -89.9999) {
-			kakudo = s_ta - 90.0000;
-		}
-		else if (s_ta <= -89.9999) {
-			kakudo = 270.0000 + s_ta;
-		}
-		dir = kakudo * DEG_TO_RAD;
-		*/
-		dir = s_ta;
-		//正面を0ラジアンとする
-        //上から見て反時計回りを＋180,時計回りを-180として考える
-
+		//おそらくatan2に式を入れてしまうと結果がバグる！！！！
 		up_t = (max_s - start_s) * acc_; //最高速度までの加速にかかる時間 /s
 		down_t = (max_s - end_s) * acc_; //減速にかかる時間 /s
 		L1 = start_s * up_t + acc * sq(up_t) *0.5; //加速時における移動距離 /m
@@ -129,28 +115,14 @@ public:
 
 	void tar_point() {
 		//  X=Vot+(1/2)*at^2;
-		if (cal_state) {//タイマーを開始する　何度呼び出しても一度だけ実行する
-			timer_start();
-		}
+		if (cal_state) timer_start();//タイマーを開始する　経路計算が終わった後だけ実行する
 		double t= read_ms() * 0.001;
 		double ut = constrain(t, 0.00, up_t);
 		double dt = constrain(t- (up_t + max_power_t), 0.00, down_t);
-
 		double target_ = acc * sq(ut) *0.50 + start_s * ut
 			+ max_s * constrain(t - up_t, 0.00, max_power_t)
 			+ (acc * sq(down_t) * 0.50 - acc * sq(down_t - dt) * 0.50) + end_s * dt;
-		/*
-		double up = acc * sq(ut) * 0.50 + start_s * ut;
-		double mp = max_s * constrain(t - up_t, 0.00, max_power_t);
-		double dp = (acc * sq(down_t) * 0.50 - acc * sq(down_t - dt) * 0.50) + end_s * dt;
-		double target = up + mp + dp;
-		*/
 		if (dis < 0)    target_ *= -1;
-		/*
-			target[0] = target_* cos(dir) + end_potion[0];
-			target[1] = target_  * -1 * sin(dir) + end_potion[1];
-			//極座標から直行座標に戻すときに位相をずらしてるから使う三角関数に注意！
-			*/
 		target[0] = target_ * cos(dir) + end_potion[0];
 		target[1] = target_ * sin(dir) + end_potion[1];
 		if (all_t <= t) {
@@ -174,16 +146,17 @@ public:
 	double end_p_y() {
 		return end_potion[1];
 	}
-
 	double tar_p_x() {
 		return target[0];
 	}
 	double tar_p_y() {
 		return target[1];
 	}
-
 	double all_time() {
 		return all_t;
+	}
+	double up__tmie() {
+		return up_t;
 	}
 };
 extern Trapezoidal auto_set;
