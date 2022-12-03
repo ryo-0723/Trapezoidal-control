@@ -16,7 +16,8 @@
 class Trapezoidal {
 private:
 	double end_s = 0, start_s = 0, max_s = 0, limit_s = 0.00;
-	double up_t = 0, down_t = 0, max_power_t = 0, all_t = 0;
+	double cal_time[4] = {};
+	/*[0]=up , [1]=max , [2]=down , [3]=all*/
 	double L1 = 0, L3 = 0;
 	double dir = 0, dis = 0;
 	double acc_, acc;
@@ -88,22 +89,23 @@ public:
 		dir = atan2(dis_[1], dis_[0]);//返り値はラジアン
 		//座標から角度を求める
 		//おそらくatan2に式を入れてしまうと結果がバグる！！！！
-		up_t = (max_s - start_s) * acc_; //最高速度までの加速にかかる時間 /s
-		down_t = (max_s - end_s) * acc_; //減速にかかる時間 /s
-		L1 = start_s * up_t + acc * sq(up_t) *0.5; //加速時における移動距離 /m
-		L3 = end_s * down_t + acc * sq(down_t)*0.5; //減速時における移動距離/m
+		cal_time[0] = (max_s - start_s) * acc_; //最高速度までの加速にかかる時間 /s
+		cal_time[2] = (max_s - end_s) * acc_; //減速にかかる時間 /s
+		L1 = start_s * cal_time[0] + acc * sq(cal_time[0]) *0.5; //加速時における移動距離 /m
+		L3 = end_s * cal_time[2] + acc * sq(cal_time[2]) * 0.5; //減速時における移動距離/m
 		if (L1 + L3 > abs(dis)) {
 			//disの台形ができなくなり、三角形になるときの制御
-			limit_s = (2.00 * acc * abs(dis) + sq(start_s) + sq(end_s)) *0.50;
-			limit_s= sqrt(limit_s);
-			up_t= (limit_s - start_s) *acc_;
-			down_t= (limit_s - end_s) * acc_;
-			all_t = up_t + down_t;
-			max_power_t = 0.0;
+			limit_s = (2.00 * acc * abs(dis) + sq(start_s) + sq(end_s)) * 0.50;
+			limit_s = sqrt(limit_s);
+			cal_time[0] = (limit_s - start_s) * acc_;
+			cal_time[1] = 0.0;
+			cal_time[2] = (limit_s - end_s) * acc_;
+			cal_time[3] = cal_time[0] + cal_time[2];
+
 		}
 		else {//台形が作れる場合の制御 
-			max_power_t = (abs(dis) - L1 - L3) / max_s; //最高速度での移動時間 /s
-			all_t = up_t + down_t + max_power_t; //移動にかかる合計時間 / s
+			cal_time[1] = (abs(dis) - L1 - L3) / max_s; //最高速度での移動時間 /s
+			cal_time[3] = cal_time[0] + cal_time[1] + cal_time[2] ; //移動にかかる合計時間 / s
 		}
 		cal_state = true;
 	}
@@ -127,15 +129,12 @@ public:
 		//  X=Vot+(1/2)*at^2;
 		if (cal_state) timer_start();//タイマーを開始する　経路計算が終わった後だけ実行する
 		double t= read_ms() * 0.001;
-		double ut = constrain(t, 0.00, up_t);
-		double dt = constrain(t- (up_t + max_power_t), 0.00, down_t);
-		double target_ = acc * sq(ut) *0.50 + start_s * ut
-			+ max_s * constrain(t - up_t, 0.00, max_power_t)
-			+ (acc * sq(down_t) * 0.50 - acc * sq(down_t - dt) * 0.50) + end_s * dt;
+
+
 		if (dis < 0)    target_ *= -1;
 		target[0] = target_ * cos(dir) + end_potion[0];
 		target[1] = target_ * sin(dir) + end_potion[1];
-		if (all_t <= t) {
+		if (cal_time[3] <= t) {
 			end_potion [0] =target[0];//一つの経路を巡行し終えた時の座標の情報を保持
 			end_potion[1] = target[1];
 			timer_stop();
@@ -163,10 +162,10 @@ public:
 		return target[1];
 	}
 	double all_time() {
-		return all_t;
+		return cal_time[3];
 	}
 	double up__tmie() {
-		return up_t;
+		return cal_time[0];
 	}
 };
 extern Trapezoidal auto_set;
