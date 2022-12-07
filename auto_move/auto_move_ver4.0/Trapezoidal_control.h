@@ -64,8 +64,6 @@ public:
 	}
 
 	void calculation(double start_s, double end_s, double dis_[2], double now_p[2]) {
-		timer_start();//タイマーを開始する←何度呼び出しても一度だけ実行される
-
 		if (cal_state) return;
 		//switch文の中から何度呼び出されても一度だけ動作するようにするもの
 		this->start_s = start_s;
@@ -101,6 +99,7 @@ public:
 	void tar_point() {
 		//  X=Vot+(1/2)*at^2;
 		if (cal_state) {
+			timer_start();//タイマーを開始する←何度呼び出しても一度だけ実行される
 		}
 		double t = read_ms() * 0.001;
 		double ut = constrain(t, 0.00, up_t);
@@ -109,7 +108,7 @@ public:
 			+ max_s * constrain(t - up_t, 0.00, max_power_t)
 			+  (-acc * sq(dt) * 0.50) + limit_s * dt;
 		//座標の更新をするところ
-		//毎周期ごとに積算せずに位置から計算
+		//毎周期ごとに積算せずに最初から計算
 		target[0] = target_ * cos(dir) + end_potion[0];
 		target[1] = target_ * sin(dir) + end_potion[1];
 
@@ -117,6 +116,7 @@ public:
 			end_potion[0] = target[0];//一つの経路を巡行し終えた時の座標の情報を保持
 			end_potion[1] = target[1];
 			timer_stop();
+			timer_reset();
 			cal_state = false;
 			next_state = true;
 		}
